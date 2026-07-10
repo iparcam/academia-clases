@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Clases - Academia Online</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0c140f 0%, #1a2416 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #4caf50;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #a0a0a0;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .clase-card {
+      background: rgba(30, 30, 30, 0.95);
+      border: 1px solid rgba(76, 175, 80, 0.3);
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .clase-card:hover {
+      border-color: #4caf50;
+      box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
+      transform: translateY(-5px);
+    }
+    .clase-card h3 {
+      color: #4caf50;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .clase-card p {
+      color: #888;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+    .btn {
+      background: linear-gradient(135deg, #4caf50, #66bb6a);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    .btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+    }
+    .loading {
+      text-align: center;
+      color: #4caf50;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎓 Academia Online</h1>
+    <p class="subtitle">Acceso a tus clases</p>
+    <div class="grid" id="clasesGrid">
+      <div class="loading">Cargando clases...</div>
+    </div>
+  </div>
+  <script>
+    fetch('/api/clases')
+      .then(res => res.json())
+      .then(clases => {
+        const grid = document.getElementById('clasesGrid');
+        grid.innerHTML = '';
+        clases.forEach(clase => {
+          const card = document.createElement('div');
+          card.className = 'clase-card';
+          card.innerHTML = `
+            <h3>${clase.nombre}</h3>
+            <p>Haz clic para ver la clase</p>
+            <button class="btn" onclick="window.location.href='/clase/${clase.id}'">
+              📺 Ver clase
+            </button>
+          `;
+          grid.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById('clasesGrid').innerHTML =
+          '<p style="color: red;">Error cargando clases. Recarga la página.</p>';
+      });
+  </script>
+</body>
+</html>
